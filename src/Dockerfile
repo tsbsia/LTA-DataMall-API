@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["src.csproj", "."]
-RUN dotnet restore "./src.csproj"
+COPY ["LTA DataMall API.csproj", "."]
+RUN dotnet restore "./LTA DataMall API.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "src.csproj" -c Release -o /app/build
+RUN dotnet build "LTA DataMall API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "src.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "LTA DataMall API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "src.dll"]
+ENTRYPOINT ["dotnet", "LTA DataMall API.dll"]
