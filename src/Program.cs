@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using TsbSia.LtaDataMallApi.Options;
+using TsbSia.LtaDataMallApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +17,29 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
 
 builder.Services.AddControllers();
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => {
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "LTA DataMall API",
+        Description = "An ASP.NET Web API for querying transport-related datasets from Singapore LTA DataMall.",
+        Contact = new OpenApiContact
+        {
+            Name = "LTA DataMall API",
+            Url = new Uri("https://github.com/tsbsia/LTA-DataMall-API"),
+        },
+        License = new OpenApiLicense
+        {
+            Name = "MIT License",
+            Url = new Uri("https://github.com/tsbsia/LTA-DataMall-API/blob/master/LICENSE"),
+        }
+    });
+});
+
+builder.Services.Configure<LtaDataServiceOptions>(builder.Configuration.GetSection(LtaDataServiceOptions.SectionName));
+
+builder.Services.AddScoped(typeof(ILtaDataService), typeof(LtaDataService));
+
 
 var app = builder.Build();
 
