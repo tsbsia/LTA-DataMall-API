@@ -3,6 +3,13 @@
 # [LTA DataMall API](https://lta-datamall-api.azurewebsites.net)
 An ASP.NET Web API for querying transport-related datasets from [Singapore LTA DataMall](https://datamall.lta.gov.sg/content/datamall/en/dynamic-data.html).
 
+
+---
+Join my [Discord Server](https://discord.gg/GkhjfYth) and <img alt="Telegram" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png?20220101141644" decoding="async" width="20" height="20">  [Telegram Channel](https://t.me/s/ltadatamallapi) 
+
+[![Discord](https://discord.com/api/guilds/1164014124871733309/widget.png?style=banner3)](https://discord.gg/GkhjfYth)
+
+
 ---
 
 
