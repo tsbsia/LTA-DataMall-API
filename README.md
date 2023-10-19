@@ -70,11 +70,11 @@ Open URL [https://localhost:7153/index.html](https://localhost:7153/index.html) 
 The project workflows can automate **build** and **publish** the <code style="color : blue">lta-datamall-api</code> Docker image to [Azure Container  Registry](https://azure.microsoft.com/en-us/products/container-registry), and **deploy** it to [Azure Web Apps for Containers](https://azure.microsoft.com/en-us/products/app-service/containers/) using [GitHub Actions](https://help.github.com/en/articles/about-github-actions).
 
 ```mermaid
-graph TD;
-    A[Push to master]-->B[Build and Publish];
-    B-->E[Discord Notification];
-    B-->C[Deploy];
-    C-->D[Discord and Telegram Notification];
+graph LR;
+    A[Push to master]-->B[Built and Published?];
+    B--Yes-->C[Deploy];
+    B--No-->E[Notification];  
+    C-->D[Notification];
 ```
 ### Prerequisites
 
@@ -119,10 +119,16 @@ jobs:
       
     - name: 'Publish to Azure Container Registry'
       run: docker push tsbsia.azurecr.io/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} 
-    - name: Discord notification
-      env:
-        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-      uses: Ilshidur/action-discord@master
+    - name: Discord and Telegram notification
+      if: failure()
+      uses: hunghg255/action-notifications@master
+      with:
+        discord_webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        telegram_bot_token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        telegram_chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
+        title: "Build and Publish"
+        description: "Failed to build and publish the project {{ EVENT_PAYLOAD.repository.full_name }}."
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
