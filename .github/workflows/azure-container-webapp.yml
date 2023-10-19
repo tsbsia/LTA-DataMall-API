@@ -28,13 +28,17 @@ jobs:
       run: docker build ./src --tag tsbsia.azurecr.io/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
       
     - name: 'Publish to Azure Container Registry'
-      run: docker push tsbsia.azurecr.io/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} 
-    - name: Discord notification
-      env:
-        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-      uses: Ilshidur/action-discord@master
+      run: docker push tsbsia.azurecr.io/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+    - name: Discord and Telegram notification
+      if: failure()
+      uses: hunghg255/action-notifications@master
       with:
-        args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been buit and published.'
+        discord_webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        telegram_bot_token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        telegram_chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
+        title: "Build and Publish"
+        description: "Failed to build and publish the project {{ EVENT_PAYLOAD.repository.full_name }}."
+    
   deploy:
     runs-on: ubuntu-latest
     needs: build
