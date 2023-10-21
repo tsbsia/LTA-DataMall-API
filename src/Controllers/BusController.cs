@@ -25,5 +25,12 @@ namespace TsbSia.LtaDataMallApi.Controllers
             var response = await LtaDataService.GetBusStopsAsync();
             return Return(response!);
         }
+
+        [HttpGet("Services")]
+        public async Task<JsonNode?> GetBusServicesAsync()
+        {
+            var response = await LtaDataService.GetBusServicesAsync();
+            return Return(response!);
+        }
     }
 }
