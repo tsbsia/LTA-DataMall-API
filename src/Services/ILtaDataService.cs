@@ -7,6 +7,6 @@ namespace TsbSia.LtaDataMallApi.Services
     {
         Task<RestResponse<JsonNode>> GetBusArrivalInfoAsync(string busStopCode, string? serviceNo = null, CancellationToken cancellationToken = default);
         Task<RestResponse<JsonNode>> GetBusStopsAsync(CancellationToken cancellationToken = default);
-
+        Task<RestResponse<JsonNode>> GetBusServicesAsync(CancellationToken cancellationToken = default);
     }
 }

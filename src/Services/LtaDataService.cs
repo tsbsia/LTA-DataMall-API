@@ -72,5 +72,18 @@ namespace TsbSia.LtaDataMallApi.Services
             });
             return response;
         }
+
+        public async Task<RestResponse<JsonNode>> GetBusServicesAsync(CancellationToken cancellationToken = default)
+        {
+            var request = new RestRequest($"/BusServices");
+
+            var response = await QueryAsync(async client =>
+            {
+                _logger.LogInformation("{service} GetBusStopsAsync. Url: {Resource}", serviceName, client.BuildUri(request));
+
+                return await client.ExecuteGetAsync<JsonNode>(request, cancellationToken);
+            });
+            return response;
+        }
     }
 }
