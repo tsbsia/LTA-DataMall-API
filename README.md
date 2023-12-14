@@ -54,7 +54,7 @@ Join my [Discord Server](https://discord.gg/GkhjfYth) and <img alt="Telegram" sr
    ```
 #### Browse 
 
-Open URL [https://localhost:7153/index.html](https://localhost:7153/index.html) in web browser.
+Open URL [https://localhost:7153/index.html](https://localhost:7153/index.html) in a web browser.
 
 </details>
 
@@ -65,94 +65,25 @@ Open URL [https://localhost:7153/index.html](https://localhost:7153/index.html) 
 
 <summary>Project Workflows</summary>
 
-## GitHub Actions for deploying to Azure Web App for Containers
+## GitHub Actions for publishing the image to Docker Hub
 
-The project workflows can automate **build** and **publish** the <code style="color : blue">lta-datamall-api</code> Docker image to [Azure Container  Registry](https://azure.microsoft.com/en-us/products/container-registry), and **deploy** it to [Azure Web Apps for Containers](https://azure.microsoft.com/en-us/products/app-service/containers/) using [GitHub Actions](https://help.github.com/en/articles/about-github-actions).
+The project workflows can automate **build** and **publish** the <code style="color : blue">lta-datamall-api</code> Docker image to [Docker Hub](https://hub.docker.com/repositories/tsbsia) using [GitHub Actions](https://help.github.com/en/articles/about-github-actions).
 
 ```mermaid
 graph LR;
     A[Push to master]-->B[Built and Published?];
-    B--Yes-->C[Deploy];
+    B--Yes-->C[Push to Docker Hub];
     B--No-->E[Notification];  
     C-->D[Notification];
 ```
 ### Prerequisites
 
--  Azure Web App and Registry provisioning. See [Deploy a custom container to App Service using GitHub Actions](https://learn.microsoft.com/en-us/azure/app-service/deploy-container-github-action?tabs=publish-profile) for more information.
-
 -   Discord Server setting up. 
 
 -   Telegram Channel setting up.
 
-
-### Workflow file
----
-
-```yaml
-name: Build and deploy a container to an Azure Web App
-
-env:
-  AZURE_WEBAPP_NAME: lta-datamall-api  # set this to the name of your Azure Web App
-  DOCKER_IMAGE_NAME: lta-datamall-api
-  
-on:
-  push:
-    paths-ignore:
-      - 'README.md'
-    branches: [ "master" ]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: 'Checkout'
-      uses: actions/checkout@v3
-      
-    - name: 'Login Azure Container Registry'
-      uses: azure/docker-login@v1
-      with:
-        login-server: tsbsia.azurecr.io
-        username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
-        password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-        
-    - name: 'Build Docker image'
-      run: docker build ./src --tag tsbsia.azurecr.io/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
-      
-    - name: 'Publish to Azure Container Registry'
-      run: docker push tsbsia.azurecr.io/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} 
-    - name: Discord and Telegram notification
-      if: failure()
-      uses: hunghg255/action-notifications@master
-      with:
-        discord_webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        telegram_bot_token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        telegram_chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
-        title: "Build and Publish"
-        description: "Failed to build and publish the project {{ EVENT_PAYLOAD.repository.full_name }}."
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Development'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        images: 'tsbsia.azurecr.io/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}'
-
-    - name: Discord and Telegram notification
-      uses: hunghg255/action-notifications@master
-      with:
-        discord_webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        telegram_bot_token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        telegram_chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
-        title: "Deploy to Azure Web App"
-        description: "New version of ${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha}} has been deployed to https://lta-datamall-api.azurewebsites.net"
-
-```
 </details>
+
+## Play-With-Docker
+Here's a quick start using Play-With-Docker (PWD) to start-up a service.
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=/tsbsia/lta-datamall-api/latest)
