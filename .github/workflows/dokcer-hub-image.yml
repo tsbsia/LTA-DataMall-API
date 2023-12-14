@@ -28,3 +28,26 @@ jobs:
         context: ./src
         push: true
         tags: tsbsia/${{ env.DOCKER_IMAGE_NAME }}:latest  
+    - name: Discord and Telegram notification
+      if: failure()
+      uses: hunghg255/action-notifications@master
+      with:
+        discord_webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        telegram_bot_token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        telegram_chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
+        title: "Build and Publish"
+        description: "Failed to build and publish the project {{ EVENT_PAYLOAD.repository.full_name }}."
+  notifification:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notification Success
+        uses: hunghg255/action-notifications@master
+        if: always()
+        with:
+           discord_webhook: ${{ secrets.DISCORD_WEBHOOK }}
+           telegram_bot_token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+           telegram_chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
+           title: "Pushed to Docke Hub"
+           description: "Test here: https://labs.play-with-docker.com/"
