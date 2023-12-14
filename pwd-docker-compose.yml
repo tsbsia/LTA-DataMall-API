@@ -1,0 +1,6 @@
+version: '3'
+services:
+  lta-datamall-api:
+    image: "tsbsia/lta-datamall-api:latest"
+    ports:
+      - "80:80"
