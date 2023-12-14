@@ -86,4 +86,5 @@ graph LR;
 
 ## Play-With-Docker
 Here's a quick start using Play-With-Docker (PWD) to start-up a service.
-[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=/tsbsia/lta-datamall-api/latest)
+
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/tsbsia/LTA-DataMall-API/master/pwd-docker-compose.yml)
